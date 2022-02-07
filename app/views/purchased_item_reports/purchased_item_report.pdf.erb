@@ -1,0 +1,63 @@
+<div class="row">
+  <div class="col-md-12">
+    <table id="custom-table">
+      <thead>
+        <tr>
+          <th>SI No.</th>
+          <th>Name</th>
+          <th>Price</th>
+          <th>Quantity</th>
+          <th width="140px">Mode of Payment</th>
+          <th>Category</th>
+          <th>Barcode</th>
+          <th>Purchased From</th>
+          <th>Total Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if @purchased_items.present? %>
+          <% count = 0 %>
+          <% @purchased_items.each do |purchased_item| %>
+            <% count += 1 %>
+            <tr>
+              <td><%= count %></td>
+              <td><%= purchased_item.item_name %></td>
+              <% price = purchased_item.item_price.present? ? purchased_item.item_price : 0 %>
+              <td><%= "Rs.#{number_with_precision(price, precision: 2) rescue nil}" %></td>
+              <td><%= purchased_item.quantity %></td>
+              <td><%= purchased_item.mode_of_payment %></td>
+              <td><%= purchased_item.category %></td>
+              <td><%= purchased_item.item_barcode %></td>
+              <td><%= purchased_item.purchased_from %></td>
+              <td><%= "Rs.#{number_with_precision((purchased_item.quantity.to_i * price.to_f), precision: 2) rescue nil}" %></td>
+            </tr>
+          <% end %>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+<style type="text/css">
+  #custom-table {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  #custom-table td, #custom-table th {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+
+  #custom-table tr:nth-child(even){background-color: #f2f2f2;}
+
+  #custom-table tr:hover {background-color: #ddd;}
+
+  #custom-table th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #4CAF50;
+    color: white;
+  }
+</style>

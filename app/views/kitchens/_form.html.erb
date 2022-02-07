@@ -1,0 +1,33 @@
+<%= form_with model: @kitchen, local: true do |f| %>
+  <div class="row">
+    <div class="col-md-4"></div>
+    <div class="col-md-4">
+      <%= f.label :item_name, "Item Name"%><br>
+      <%= f.text_field :item_name , class: "form-control", required: true %>
+    </div>
+  </div>
+  <br>
+  <div class="row">
+    <div class="col-md-4"></div>
+    <div class="col-md-4">
+      <%= f.label :price %><br>
+      <%= f.text_field :price, class: "form-control", required: true %>
+    </div>
+  </div><br>
+  <div class="row">
+    <div class="col-md-4"></div>
+    <div class="col-md-4">
+      <%= f.label :category %><br>
+      <%= f.select :category, options_for_select(["CHATT", "BREAKFAST", "SOUTH INDIAN", "INDIAN BREAD", "RICE ITEMS", "CHINESE", "MEALS", "SNACKS", "DRINKS", "OTHER"], @kitchen.category), {prompt: "Select Category"}, { class: 'form-control', required: true } %>
+    </div>
+  </div>
+  <br>
+  <center><%= f.submit "#{@kitchen.new_record? ? 'Create Menu' : 'Update Menu'}", class: "btn btn-success" %></center><br>
+  <center><%= link_to "Back", :back %></center>
+<% end %>
+<style type="text/css">
+  body {
+    background-image: url(<%= asset_path("blur-background04.jpg")%>);
+    background-repeat: no-repeat;
+  }
+</style>

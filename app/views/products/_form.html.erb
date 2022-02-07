@@ -1,0 +1,77 @@
+<%= form_with model: @product, local: true do |f| %>
+  <div class="row">
+    <div class="col-md-4">
+      <%= f.label :name, "Product Name", class: "required-field" %><br>
+      <%= f.text_field :name , class: "form-control", required: true, placeholder: "Enter Product Name" %>
+    </div>
+    <div class="col-md-4">
+      <%= f.label :sku_no, class: "required-field" %><br>
+      <%= f.text_field :sku_no , class: "form-control", required: true, placeholder: "Enter Sku No" %>
+    </div>
+    <div class="col-md-4">
+      <%= f.label :category, class: "required-field" %><br>
+      <%= f.text_field :category, class: "form-control", required: true, placeholder: "Enter category name Example : Jeans, Tshirt" %>
+    </div>
+  </div>
+  <br>
+  <div class="row">
+    <div class="col-md-4">
+      <%= f.label :barcode, class: "required-field" %><br>
+      <%= f.text_field :barcode, class: "form-control", required: true, placeholder: "Enter Barcode" %>
+    </div>
+    <div class="col-md-4">
+      <%= f.label :quantity, class: "required-field" %><br>
+      <%= f.text_field :quantity, class: "form-control", required: true, placeholder: "Enter Quantity" %>
+    </div>
+    <div class="col-md-4">
+      <%= f.label :base_price, class: "required-field" %><br>
+      <%= f.text_field :base_price, class: "form-control", required: true, placeholder: "Enter Base Price" %>
+    </div>
+  </div><br>
+  <div class="row">
+    <div class="col-md-4">
+      <%= f.label :sale_price, class: "required-field" %><br>
+      <%= f.text_field :sale_price, class: "form-control", required: true, placeholder: "Enter Sale Price" %>
+    </div>
+    <div class="col-md-4">
+      <%= f.label :gst_percentage, class: "required-field" %><br>
+      <%= f.text_field :gst_percentage, class: "form-control", required: true, placeholder: "Enter Gst Percentage" %>
+    </div>
+    <div class="col-md-4">
+      <%= f.label :hsn_code, class: "required-field" %><br>
+      <%= f.text_field :hsn_code, class: "form-control", required: true, placeholder: "Enter Hsn Code" %>
+    </div>
+  </div><br>
+  <div class="row">
+    <div class="col-md-4">
+      <%= f.label :cost, class: "required-field" %><br>
+      <%= f.text_field :cost, class: "form-control", required: true, placeholder: "Enter the cost of product" %>
+    </div>
+    <div class="col-md-4">
+      <%= f.label :vendor_id, class: "required-field" %><br>
+      <%= f.select :vendor_id, options_for_select(Vendor.all.collect { |d| [d.name, d.id]}, selected: @product.vendor_id), {include_blank: 'Select Vendor Name'}, { class: 'form-control', required: true } %>
+    </div>
+  </div><br>
+
+  <br>
+  <center><%= f.submit "#{@product.new_record? ? 'Add Product' : 'Update Product'}", class: "btn btn-success" %></center><br>
+  <center><%= link_to "Back", :back %></center>
+<% end %>
+<script type="text/javascript">
+  $(document).ready(function() {
+  $('#product_vendor_id').select2({
+    placeholder: "Choose a Vendor"
+  });
+});
+</script>
+<style type="text/css">
+  body {
+    background: #E3E6E3;
+  }
+  .product_vendor_id {
+    background-color: red;
+  }
+  .select2-selection__arrow{
+    background-color: grey;
+  }
+</style>

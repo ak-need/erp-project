@@ -1,0 +1,89 @@
+<div class="row">
+  <div class="col-md-12">
+    <table id="custom-table">
+      <thead>
+        <tr>
+          <th width="60px">SI No.</th>
+          <th>Product Name</th>
+          <th width="16%">Sold Date</th>
+          <th width="13%">Sold Price</th>
+          <th width="8%">Quantity</th>
+          <th>Sold Value</th>
+          <th>Tax %</th>
+          <th>Tax Amount</th>
+          <th>Vendor Amount</th>
+          <% if @check_condition_in_pdf != "Vendor Amount" %>
+            <th>Vendor Name</th>
+          <% end %>
+        </tr>
+      </thead>
+      <tbody>
+        <% if @sold_products.present? %>
+          <% count = 0 %>
+          <% grand_vendor_amount = 0 %>
+          <% grand_tax_amount = 0 %>
+          <% grand_sol_value = 0 %>
+          <% @sold_products.each do |sold_product| %>
+            <% count += 1 %>
+            <tr>
+              <% product_detail = Product.find_by(id: sold_product.product_id) %>
+              <% vendor_detail = Vendor.find_by(id: sold_product.vendor_id) %>
+              <% tax_amount = sold_product.tax_amount.present? ? sold_product.tax_amount : 0 %>
+              <% vendor_amount = sold_product.vendor_amount.present? ? sold_product.vendor_amount : sold_product.sold_amount %>
+              <% tax_percentage = sold_product.tax_percentage.present? ? sold_product.tax_percentage : 0 %>
+              <% grand_vendor_amount = grand_vendor_amount + vendor_amount %>
+              <% grand_tax_amount = grand_tax_amount + tax_amount %>
+              <% grand_sol_value = grand_sol_value + sold_product.sold_amount.to_f %>
+              <td><%= count %></td>
+              <td><%= product_detail.name rescue nil %></td>
+              <td><%= sold_product.created_at.strftime("%m-%d-%Y %I:%M %p") %></td>
+              <td><%= "Rs.#{number_with_precision(product_detail.sale_price, precision: 2) rescue nil}" %></td>
+              <td style="text-align: center;"><%= sold_product.quantity rescue nil %></td>
+              <td><%= "Rs.#{number_with_precision(sold_product.sold_amount, precision: 2) rescue nil}" %></td>
+              <td><%= number_with_precision(tax_percentage, precision: 2) rescue nil %></td>
+              <td><%= "Rs.#{number_with_precision(tax_amount, precision: 2) rescue nil}" %></td>
+              <td><%= "Rs.#{number_with_precision(vendor_amount, precision: 2) rescue nil}" %></td>
+              <% if @check_condition_in_pdf != "Vendor Amount" %>
+                <td><%= vendor_detail.name rescue nil %></td>
+              <% end %>
+            </tr>
+          <% end %>
+          <tr>
+            <td colspan="2"><strong>Grand Total</strong></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><strong><%= "Rs.#{number_with_precision(grand_sol_value, precision: 2) rescue nil}" %></strong></td>
+            <td></td>
+            <td><strong><%= "Rs.#{number_with_precision(grand_tax_amount, precision: 2) rescue nil}" %></strong></td>
+            <td><strong><%= "Rs.#{number_with_precision(grand_vendor_amount, precision: 2) rescue nil}" %></strong></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+<style type="text/css">
+  #custom-table {
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#custom-table td, #custom-table th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+#custom-table tr:nth-child(even){background-color: #f2f2f2;}
+
+#custom-table tr:hover {background-color: #ddd;}
+
+#custom-table th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #4CAF50;
+  color: white;
+}
+</style>

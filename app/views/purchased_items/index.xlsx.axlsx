@@ -1,0 +1,58 @@
+wb = xlsx_package.workbook
+
+wb.styles do |style|
+  mandatory_cell = style.add_style bg_color: '808080', b: true, fg_color: '00', sz: 10, border: { style: :thin, color: '00' },alignment: { horizontal: :center }
+  normal_cell = style.add_style bg_color: 'CEE0DF', b: true, fg_color: '00', sz: 10, border: { style: :thin, color: '00' }, alignment: { horizontal: :center }
+  instruction_cell = style.add_style bg_color: 'cbcbff', b: true, fg_color: '00', sz: 10, border: { style: :thin, color: '00' }, alignment: { horizontal: :center }
+  note_cell = style.add_style bg_color: 'AADDFF', fg_color: '00', width: '1522', b: true, sz: 10, border: { style: :thin, color: '00' }, alignment: { horizontal: :left }
+    amount_cell = style.add_style bg_color: 'ffc04d',b: true, fg_color: '00', sz: 10, border: { style: :thin, color: '00' }
+  columns = {
+      'SI No.' => normal_cell,
+      'Name' => mandatory_cell,
+      'Price' => mandatory_cell,
+      'Quantity' => mandatory_cell,
+      'Barcode' => normal_cell,
+      'Category' => mandatory_cell,
+      'Mode of Payment' => mandatory_cell,
+      'Purchased From' => mandatory_cell
+  }
+  wb.add_worksheet(name: "Instruction") do |sheet|
+    sheet.sheet_protection.password = "fish"
+    sheet.add_row
+    sheet.add_row ['', '', '', 'Optional Fields           ', '     '], style: [0, 0, 0, normal_cell]
+    sheet.add_row ['', '', '', 'Mandatory Fields          ', '     '], style: [0, 0, 0, mandatory_cell]
+    sheet.add_row []
+    sheet.add_row ['', '', '', 'Note                      ', '     '], style: [0, 0, 0, instruction_cell]
+    sheet.add_row ['', '', '', 'Avoid Cut options in any of the work Sheets'], style: [0, 0, 0, note_cell]
+    sheet.add_row ['', '', '', 'While Pasting data from other excel File,use only Paste Special / Values Option'], style: [0, 0, 0, note_cell]
+    sheet.add_row ['', '', '', 'Before any operation on excel file make sure you are not in ExcelTemplate Edit mode'], style: [0, 0, 0, note_cell]
+    sheet.add_row ['', '', '', 'Avoid using enter character ( Alt + Enter) in any cell '], style: [0, 0, 0, note_cell]
+    sheet.add_row ['', '', '', '', 'Cash'], style: [0, 0, 0, 0, note_cell]
+    sheet.add_row ['', '', '', '', 'Paytm'], style: [0, 0, 0, 0, note_cell]
+    sheet.add_row ['', '', '', '', 'PhonePe'], style: [0, 0, 0, 0, note_cell]
+    sheet.add_row ['', '', '', '', 'Google Pay'], style: [0, 0, 0, 0, note_cell]
+    sheet.add_row ['', '', '', '', 'Online Banking'], style: [0, 0, 0, 0, note_cell]
+    sheet.add_row ['', '', '', '', 'Other'], style: [0, 0, 0, 0, note_cell]
+    sheet.column_info[4].hidden = true
+  end
+  wb.add_worksheet(name: "Purchased Items") do |sheet|
+    sheet.add_row columns.map { '' }, style: columns.map { |key, value| columns["#{key}"] }
+    sheet.add_row columns.map { |key, value| key }, style: columns.map { |key, value| columns["#{key}"] }
+    sheet.add_row (1..columns.length).to_a, style: columns.map { |key, value| columns["#{key}"] }
+    sheet.add_data_validation("G4:G1000000", {
+      :type => :list,
+      :formula1 => "Instruction!E$10:E$100000",
+      :showDropDown => false,
+      :showErrorMessage => true,
+      :errorTitle => '',
+      :error => 'Please use the dropdown selector to select a mode of payment',
+      :errorStyle => :stop,
+      :showInputMessage => true,
+      :promptTitle => 'Be careful!',
+      :prompt => 'Choose the value from the dropdown'
+    })
+  end
+
+end
+
+

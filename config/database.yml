@@ -1,0 +1,37 @@
+default: &default
+  adapter: postgresql
+  host: localhost
+  port: 5432
+  pool: 5
+  schema_search_path: public,extensions
+
+development:
+  <<: *default
+  database: mark_fly_dev
+  username:
+  password:
+
+production:
+  <<: *default
+  database: mark_fly_dev
+  username:
+  password:
+
+test: &test
+  <<: *default
+  database: mark_fly_test
+  username:
+  password:
+
+ci: &ci
+  adapter: postgresql
+  host: db
+  database: mark_fly_test
+  username:
+  password:
+  pool: 5
+  schema_search_path: public,extensions
+
+cucumber:
+  <<: *test
+

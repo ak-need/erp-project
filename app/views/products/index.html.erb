@@ -1,0 +1,67 @@
+<% content_for :co_header do %>
+  <div class="row co-header">
+    <div class="col-md-3">
+      <div>Vendor products</div>
+    </div>
+    <div class="col-md-3">
+    </div>
+    <div class="col-md-3">
+    </div>
+    <div class="col-md-3">
+      <div><%= link_to "Add Product", new_product_path, class: "btn btn-success btn-xs", style: "margin-left:-30px;margin-top:-8px;"%></div>
+    </div>
+  </div>
+<% end %>
+<table id="custom-table">
+  <thead>
+    <tr>
+      <th>SI No.</th>
+      <th>Product Name</th>
+      <th>SKU No</th>
+      <th>Category</th>
+      <th>Barcode</th>
+      <th>Quantity</th>
+      <th>Base Price</th>
+      <th>Sale Price</th>
+      <th>GST %</th>
+      <th>Cost</th>
+      <th>HSN Code</th>
+      <th>Vendor</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% if @products.present? %>
+      <% count = 0 %>
+      <% @products.each do |product|%>
+        <% count += 1 %>
+        <tr>
+          <td><%= count %></td>
+          <td><%= product.name %></td>
+          <td><%= product.sku_no %></td>
+          <td><%= product.category %></td>
+          <td><%= product.barcode %></td>
+          <td><%= product.quantity %></td>
+          <% base_price = product.base_price.present? ? product.base_price : 0 %>
+          <% sale_price = product.sale_price.present? ? product.sale_price : 0 %>
+          <% gst_percentage = product.gst_percentage.present? ? product.gst_percentage : 0 %>
+          <% cost = product.cost.present? ? product.cost : 0 %>
+          <td><%= "Rs.#{number_with_precision(base_price, precision: 2)}" %></td>
+          <td><%= "Rs.#{number_with_precision(sale_price, precision: 2)}" %></td>
+          <td><%= "#{number_with_precision(gst_percentage, precision: 2)} %" %></td>
+          <td><%= "Rs.#{number_with_precision(cost, precision: 2)}" %></td>
+          <td><%= product.hsn_code.present? ? product.hsn_code : '-' %></td>
+          <td><%= product.vendor.name %></td>
+          <td><center><%= link_to image_tag("edit.png"), edit_product_path(product, vendor_id: product.vendor_id) %></center></td>
+          <td><center><%= link_to image_tag("trash.png"), product_path(product), method: :delete, data: { confirm: 'Do you want to delete this Product?' } %></center></td>
+        </tr>
+      <% end %>
+    <% end %>
+  </tbody>
+</table>
+<script type="text/javascript">
+  $(document).ready( function () {
+    $('#custom-table').DataTable();
+  });
+</script>

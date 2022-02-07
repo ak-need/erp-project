@@ -1,0 +1,104 @@
+<% content_for :co_header do %>
+  <div class="row co-header">
+    <div class="col-md-3">
+      <div>Products Report</div>
+    </div>
+    <div class="col-md-6"></div>
+    <div class="col-md-3">
+      <div></div>
+    </div>
+  </div>
+<% end %>
+<%= form_tag product_reports_path, method: :get, name: "sale-report" do %>
+  <div class="row">
+    <div class="col-md-3">
+      <%= label_tag :vendor_id, " Select Vendor" %>
+      <%= select_tag :vendor_id, options_from_collection_for_select(Vendor.all, 'id', 'name', params[:vendor_id].present? ? params[:vendor_id] : 'All'), include_blank: "All", class: 'form-control', onchange: 'this.form.submit();' %>
+    </div>
+    <div class="col-md-3">
+      <%= label_tag :product_id, "Select Item Name" %><br>
+      <%= select_tag :product_id, options_from_collection_for_select(Product.all, 'id', 'name', params[:product_id].present? ? params[:product_id] : 'All'), include_blank: "All", class: 'form-control', onchange: 'this.form.submit();' %>
+    </div>
+    <div class="col-md-3">
+      <%= label_tag :category, "Select Category" %><br>
+      <%= select_tag :category, options_for_select(Product.pluck(:category).uniq, params[:category].present? ? params[:category] : 'All'), include_blank: "All", class: 'form-control', onchange: 'this.form.submit();' %>
+    </div>
+  </div>
+<% end %>
+<br><br>
+<div class="row">
+  <div class="col-md-12">
+    <table id="custom-table">
+      <thead>
+        <tr>
+          <th>SI No.</th>
+          <th>Product Name</th>
+          <th>SKU No</th>
+          <th>Category</th>
+          <th>Barcode</th>
+          <th>Quantity</th>
+          <th>Base Price</th>
+          <th>Sale Price</th>
+          <th>GST %</th>
+          <th>Cost</th>
+          <th>HSN Code</th>
+          <th>Vendor</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if @products.present? %>
+          <% count = 0 %>
+          <% @products.each do |product| %>
+            <% count += 1 %>
+            <tr>
+              <td><%= count %></td>
+              <td><%= product.name %></td>
+              <td><%= product.sku_no %></td>
+              <td><%= product.category %></td>
+              <td><%= product.barcode %></td>
+              <td><%= product.quantity %></td>
+              <% base_price = product.base_price.present? ? product.base_price : 0 %>
+              <% sale_price = product.sale_price.present? ? product.sale_price : 0 %>
+              <% gst_percentage = product.gst_percentage.present? ? product.gst_percentage : 0 %>
+              <% cost = product.cost.present? ? product.cost : 0 %>
+              <td><%= "Rs.#{number_with_precision(base_price, precision: 2) rescue nil}" %></td>
+              <td><%= "Rs.#{number_with_precision(sale_price, precision: 2) rescue nil}" %></td>
+              <td><%= "#{gst_percentage}%" %></td>
+              <td><%= "Rs.#{number_with_precision(cost, precision: 2) rescue nil}" %></td>
+              <td><%= product.hsn_code %></td>
+              <td><%= Vendor.find_by(id: product.vendor_id).name %></td>
+            </tr>
+          <% end %>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-1">
+    <%= link_to 'Generate PDF', product_reports_path(format: :pdf, product_id: params[:product_id], vendor_id: params[:vendor_id], category: params[:category]), class: "btn btn-success", target: "_blank" %>
+  </div>
+</div>
+<br><br><br>
+<script type="text/javascript">
+  $('#vendor_id').select2();
+  $('#product_id').select2();
+  $('#category').select2();
+  $('#custom-table').dataTable();
+</script>
+<style type="text/css">
+  .select2-container .select2-selection--single {
+    height: 39px;
+    padding-top: 5px
+  }
+  .select2-selection__arrow {
+    margin-top: 5px;
+  }
+  #date-range {
+    margin-top: -30px;
+  }
+  .calendar-icon {
+    margin-left: 12px;
+    margin-top: 10px;
+  }
+</style>

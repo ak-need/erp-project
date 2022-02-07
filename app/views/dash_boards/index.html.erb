@@ -1,0 +1,115 @@
+<div class="row co-header">
+  <div class="col-md-3">
+    <div><%= @co_header%></div>
+  </div>
+  <div class="col-md-4">
+  </div>
+  <div class="col-md-2">
+    <div><%= link_to "View Vendors", vendors_path, class: "btn btn-info btn-xs", style: "margin-top:-11px;margin-left:-60px" %></div>
+  </div>
+  <div class="col-md-2">
+    <div><%= link_to "Add Vendor", new_vendor_path, class: "btn btn-success btn-xs", style: "margin-top:-11px;margin-left:-60px" %></div>
+  </div>
+</div>
+
+<style>
+  table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+  }
+  td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+  }
+  tr:nth-child(even) {
+    background-color: #dddddd;
+  }
+  .circle-tile {
+    margin-bottom: 15px;
+    text-align: center;
+    width: 320px;
+  }
+  .circle-tile-content {
+    padding-top: 50px;
+  }
+  .circle-tile-number {
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1;
+    padding: 5px 0 15px;
+  }
+  .circle-tile-description {
+    /*text-transform: uppercase;*/
+  }
+  .circle-tile-footer {
+    background-color: rgba(0, 0, 0, 0.1);
+    color: rgba(255, 255, 255, 0.5);
+    display: block;
+    padding: 5px;
+    transition: all 0.4s ease-in-out 0s;
+  }
+  .circle-tile-footer:hover {
+    background-color: rgba(0, 0, 0, 0.2);
+    color: rgba(255, 255, 255, 0.5);
+    text-decoration: none;
+  }
+  .sounth {
+    background-color: rgb(102, 0, 51);
+  }
+  .meals {
+    background-color: rgb(168, 50, 158);
+  }
+  .dark-blue {
+    background-color: #34495E;
+  }
+  .green {
+    background-color: rgb(0, 102, 0);
+  }
+  .blue {
+    background-color: rgb(50, 58, 168);
+  }
+  .chinese {
+    background-color: rgb(125, 50, 168);
+  }
+  .rice {
+    background-color: rgb(168, 50, 60);
+  }
+  .red {
+    background-color: #E74C3C;
+  }
+  .yellow {
+    background-color: #F1C40F;
+  }
+  .text-faded {
+      color: rgba(255, 255, 255, 0.7);
+  }
+</style>
+<% color_array = ["green", "red", "yellow", "blue", "dark-blue", "meals", "sounth", "chinese", "rice", "green"] %>
+<div class="container">
+  <div class="row">
+    <% if @vendors.present? %>
+      <% count = 0 %>
+      <% @vendors.each do |vendor| %>
+        <%count = count%>
+        <div class="col-sm-4">
+          <div class="circle-tile ">
+            <% class_name = "circle-tile-content" + " " + "#{color_array.sample}" %>
+            <div class="<%= class_name %>" >
+              <div class="circle-tile-number text-faded"><%= vendor.name %></div>
+              <div class="circle-tile-description text-faded">No of Products: <%= Product.where(vendor_id: vendor.id).count %></div>
+              <%= link_to fetch_product_vendor_wise_products_path(vendor_id: vendor.id), class: "circle-tile-footer" do %>More Info
+                <i class="fa fa-chevron-circle-right"></i>
+              <% end %>
+            </div>
+          </div>
+        </div>
+        <% count += 1 %>
+      <% end %>
+    <% end %>
+  </div>
+</div>
+
+
+

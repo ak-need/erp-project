@@ -1,0 +1,57 @@
+<%= form_with model: @ourchased_item, local: true do |f| %>
+  <div class="row">
+    <div class="col-md-1"></div>
+    <div class="col-md-3">
+      <%= f.label :item_name, "Name", class: "required-field" %><br>
+      <%= f.text_field :item_name , class: "form-control", required: true, placeholder: "Enter Item Name" %>
+    </div>
+    <div class="col-md-3">
+      <%= f.label :item_price, 'Price (Rs.)', class: "required-field" %><br>
+      <%= f.number_field :item_price , class: "form-control", required: true, placeholder: "Enter price" %>
+    </div>
+    <div class="col-md-3">
+      <%= f.label :quantity, class: "required-field" %><br>
+      <%= f.number_field :quantity, class: "form-control", required: true, placeholder: "Enter Quantity" %>
+    </div>
+  </div>
+  <br>
+  <div class="row">
+    <div class="col-md-1"></div>
+    <div class="col-md-3">
+      <%= f.label :category, class: "required-field" %><br>
+      <%= f.text_field :category, class: "form-control", required: true, placeholder: "Enter Category" %>
+    </div>
+    <div class="col-md-3">
+      <%= f.label :item_barcode, "Barcode" %><br>
+      <%= f.text_field :item_barcode, class: "form-control", placeholder: "Enter Barcode" %>
+    </div>
+    <div class="col-md-3">
+      <%= f.label :mode_of_payment, class: "required-field" %><br>
+      <%= f.select :mode_of_payment, options_for_select(["Cash", "Paytm", "PhonePe", "Google Pay", "Online Banking", "Other"], @ourchased_item.mode_of_payment), {prompt: "Select Mode of payment"}, { class: 'form-control', required: true } %>
+    </div>
+  </div><br>
+  <div class="row">
+    <div class="col-md-1"></div>
+    <div class="col-md-3">
+      <%= f.label :purchased_from, "Purchased From", class: "required-field" %><br>
+      <%= f.text_field :purchased_from, class: "form-control", required: true, placeholder: "Purchased From Ex: Example pvt ltd" %>
+    </div>
+
+  </div><br>
+
+  <br>
+  <center><%= f.submit "#{@ourchased_item.new_record? ? 'Add Item' : 'Update Item'}", class: "btn btn-success" %></center><br>
+  <center><%= link_to "Back", :back %></center>
+<% end %>
+<script type="text/javascript">
+  $(document).ready(function() {
+  $('#product_vendor_id').select2({
+    placeholder: "Choose a Vendor"
+  });
+});
+</script>
+<style type="text/css">
+  body {
+    background: #E3E6E3;
+  }
+</style>

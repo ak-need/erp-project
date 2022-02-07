@@ -1,0 +1,3 @@
+class SoldProduct < ApplicationRecord
+
+end

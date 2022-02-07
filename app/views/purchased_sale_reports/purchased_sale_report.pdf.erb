@@ -1,0 +1,59 @@
+<div class="row">
+  <div class="col-md-12">
+    <table id="custom-table">
+      <thead>
+        <tr>
+          <th>SI No.</th>
+          <th>Name</th>
+          <th>Price</th>
+          <th>Quantity</th>
+          <th>Category</th>
+          <th>Barcode</th>
+          <th>Total Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if @purchased_sales_item.present? %>
+          <% count = 0 %>
+          <% @purchased_sales_item.each do |sold_item| %>
+            <% count += 1 %>
+            <tr>
+              <td><%= count %></td>
+              <td><%= sold_item.name %></td>
+              <% price = sold_item.price.present? ? sold_item.price : 0 %>
+              <td><%= "Rs.#{number_with_precision(price, precision: 2) rescue nil}" %></td>
+              <td><%= sold_item.quantity %></td>
+              <td><%= sold_item.category %></td>
+              <td><%= sold_item.barcode %></td>
+              <td><%= "Rs.#{number_with_precision((sold_item.quantity.to_i * price.to_f), precision: 2) rescue nil}" %></td>
+            </tr>
+          <% end %>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+<style type="text/css">
+  #custom-table {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  #custom-table td, #custom-table th {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+
+  #custom-table tr:nth-child(even){background-color: #f2f2f2;}
+
+  #custom-table tr:hover {background-color: #ddd;}
+
+  #custom-table th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #4CAF50;
+    color: white;
+  }
+</style>

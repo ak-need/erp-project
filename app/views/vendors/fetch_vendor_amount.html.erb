@@ -1,0 +1,133 @@
+<% content_for :co_header do %>
+  <div class="row co-header">
+    <div class="col-md-3">
+      <div><%= "Vendors Amount > #{Vendor.find_by(id: params[:vendor_id].to_i).name rescue nil}"%></div>
+    </div>
+    <div class="col-md-6"></div>
+    <div class="col-md-3">
+      <div></div>
+    </div>
+  </div>
+<% end %>
+<%= form_tag fetch_vendor_amount_vendors_path(vendor_id: params[:vendor_id]), method: :get, name: "sale-report" do %>
+  <div class="row">
+    <%= hidden_field_tag 'vendor_id', params[:vendor_id] %>
+    <div class="col-md-3">
+      <%= label_tag :product_id, "Select Product Name" %><br>
+      <%= select_tag :product_id, options_from_collection_for_select(Product.where(vendor_id: params[:vendor_id]), 'id', 'name', params[:product_id].present? ? params[:product_id] : 'All'), include_blank: "All", class: 'form-control', onchange: 'this.form.submit();' %>
+    </div>
+    <div class="col-md-3" style="width: 230px">
+      <label for="reportDateRange">Duration</label><br>
+      <div class="calendar-icon">
+      <i class="fa fa-calendar "></i></div>
+      <%= text_field_tag "date_range", params["date_range"], id: "date-range", class: "form-control text-right" %>
+    </div>
+  </div>
+<% end %>
+<br><br>
+<div class="row">
+  <div class="col-md-12">
+    <table id="custom-table">
+      <thead>
+        <tr>
+          <th width="60px">SI No.</th>
+          <th>Product Name</th>
+          <th width="16%">Sold Date</th>
+          <th width="13%">Sold Price</th>
+          <th width="8%">Quantity</th>
+          <th>Sold Value</th>
+          <th>Tax %</th>
+          <th>Tax Amount</th>
+          <th>Vendor Amount</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if @vendor_amounts.present? %>
+          <% count = 0 %>
+          <% @grand_vendor_amount = 0 %>
+          <% @grand_tax_amount = 0 %>
+          <% @grand_sol_value = 0 %>
+          <% @vendor_amounts.each do |sold_product| %>
+            <% count += 1 %>
+            <tr>
+              <% product_detail = Product.find_by(id: sold_product.product_id) %>
+              <% vendor_detail = Vendor.find_by(id: sold_product.vendor_id) %>
+              <% tax_amount = sold_product.tax_amount.present? ? sold_product.tax_amount : 0 %>
+              <% vendor_amount = sold_product.vendor_amount.present? ? sold_product.vendor_amount : sold_product.sold_amount %>
+              <% tax_percentage = sold_product.tax_percentage.present? ? sold_product.tax_percentage : 0 %>
+              <% @grand_vendor_amount = @grand_vendor_amount + vendor_amount %>
+              <% @grand_tax_amount = @grand_tax_amount + tax_amount %>
+              <% @grand_sol_value = @grand_sol_value + sold_product.sold_amount.to_f %>
+              <td><%= count %></td>
+              <td><%= product_detail.name rescue nil %></td>
+              <td><%= sold_product.created_at.strftime("%m-%d-%Y %I:%M %p") %></td>
+              <td><%= "Rs.#{number_with_precision(product_detail.sale_price, precision: 2) rescue nil}" %></td>
+              <td style="text-align: center;"><%= sold_product.quantity rescue nil %></td>
+              <td><%= "Rs.#{number_with_precision(sold_product.sold_amount, precision: 2) rescue nil}" %></td>
+              <td><%= number_with_precision(tax_percentage, precision: 2) rescue nil %></td>
+              <td><%= "Rs.#{number_with_precision(tax_amount, precision: 2) rescue nil}" %></td>
+              <td><%= "Rs.#{number_with_precision(vendor_amount, precision: 2) rescue nil}" %></td>
+              <td><center><%= link_to image_tag("trash.png"), delete_vendor_amount_vendors_path(vendor_amount_id: sold_product.id, vendor_id: params[:vendor_id]), data: { confirm: 'Do you want to delete this Item?' } %></center></td>
+            </tr>
+          <% end %>
+        <% end %>
+      </tbody>
+      <tr>
+        <td colspan="2"><strong>Grand Total</strong></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td><strong><%= "Rs.#{number_with_precision(@grand_sol_value.present? ? @grand_sol_value : 0, precision: 2) rescue nil}" %></strong></td>
+        <td></td>
+        <td><strong><%= "Rs.#{number_with_precision(@grand_tax_amount.present? ? @grand_tax_amount : 0, precision: 2) rescue nil}" %></strong></td>
+        <td><strong><%= "Rs.#{number_with_precision(@grand_vendor_amount.present? ? @grand_vendor_amount : 0, precision: 2) rescue nil}" %></strong></td>
+        <td></td>
+      </tr>
+    </table>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-1">
+    <%= link_to 'Generate PDF', fetch_vendor_amount_vendors_path(format: :pdf, vendor_id: params[:vendor_id], product_id: params[:product_id], date_range: params[:date_range]), class: "btn btn-success", target: "_blank" %>
+  </div>
+</div>
+<br><br><br>
+<script type="text/javascript">
+  $('#product_id').select2();
+  $('#custom-table').dataTable();
+  $('#date-range').daterangepicker({
+    opens: 'left',
+    ranges: {
+      'Today': [moment(), moment()],
+      'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+      'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+      'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+      'This Month': [moment().startOf('month'), moment().endOf('month')],
+      'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+    },
+    locale: { format: 'DD/MM/YYYY'}
+  })
+  $(document).ready(function() {
+    $('#date-range').on('change', function() {
+      document.forms['sale-report'].submit();
+    });
+    document.getElementById("date-range").value = "<%= params["date_range"] %>";
+  });
+</script>
+<style type="text/css">
+  .select2-container .select2-selection--single {
+    height: 39px;
+    padding-top: 5px
+  }
+  .select2-selection__arrow {
+    margin-top: 5px;
+  }
+  #date-range {
+    margin-top: -30px;
+  }
+  .calendar-icon {
+    margin-left: 12px;
+    margin-top: 10px;
+  }
+</style>

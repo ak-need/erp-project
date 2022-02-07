@@ -1,0 +1,94 @@
+<% content_for :co_header do %>
+  <div class="row co-header">
+    <div class="col-md-3">
+      <div>Purchased Items Report</div>
+    </div>
+    <div class="col-md-6"></div>
+    <div class="col-md-3">
+      <div></div>
+    </div>
+  </div>
+<% end %>
+<%= form_tag purchased_item_reports_path, method: :get, name: "purchased_item-report" do %>
+  <div class="row">
+    <div class="col-md-3">
+      <%= label_tag :purchased_from, "Purchased From" %>
+      <%= select_tag :purchased_from, options_for_select(@purchased_items.pluck(:purchased_from).uniq, params[:purchased_from].present? ? params[:purchased_from] : 'All'), include_blank: "All", class: 'form-control', onchange: 'this.form.submit();' %>
+    </div>
+    <div class="col-md-3">
+      <%= label_tag :mode_of_payment, "Mode of Payment" %><br>
+      <%= select_tag :mode_of_payment, options_for_select(["Cash", "Paytm", "PhonePe", "Google Pay", "Online Banking", "Other"], params[:mode_of_payment].present? ? params[:mode_of_payment] : 'All'), include_blank: "All", class: 'form-control', onchange: 'this.form.submit();' %>
+    </div>
+    <div class="col-md-3">
+      <%= label_tag :category, "Select Category" %><br>
+      <%= select_tag :category, options_for_select(@purchased_items.pluck(:category).uniq, params[:category].present? ? params[:category] : 'All'), include_blank: "All", class: 'form-control', onchange: 'this.form.submit();' %>
+    </div>
+  </div>
+<% end %>
+<br><br>
+<div class="row">
+  <div class="col-md-12">
+    <table id="custom-table">
+      <thead>
+        <tr>
+          <th>SI No.</th>
+          <th>Name</th>
+          <th>Price</th>
+          <th>Quantity</th>
+          <th width="120px">Mode of Payment</th>
+          <th>Category</th>
+          <th>Barcode</th>
+          <th>Purchased From</th>
+          <th>Total Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if @purchased_items.present? %>
+          <% count = 0 %>
+          <% @purchased_items.each do |purchased_item| %>
+            <% count += 1 %>
+            <tr>
+              <td><%= count %></td>
+              <td><%= purchased_item.item_name %></td>
+              <% price = purchased_item.item_price.present? ? purchased_item.item_price : 0 %>
+              <td><%= "Rs.#{number_with_precision(price, precision: 2) rescue nil}" %></td>
+              <td><%= purchased_item.quantity %></td>
+              <td><%= purchased_item.mode_of_payment %></td>
+              <td><%= purchased_item.category %></td>
+              <td><%= purchased_item.item_barcode %></td>
+              <td><%= purchased_item.purchased_from %></td>
+              <td><%= "Rs.#{number_with_precision((purchased_item.quantity.to_i * price.to_f), precision: 2) rescue nil}" %></td>
+            </tr>
+          <% end %>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-1">
+    <%= link_to 'Generate PDF', purchased_item_reports_path(format: :pdf, purchased_from: params[:purchased_from], mode_of_payment: params[:mode_of_payment], category: params[:category]), class: "btn btn-success", target: "_blank" %>
+  </div>
+</div>
+<br><br><br>
+<script type="text/javascript">
+  $('#purchased_from').select2();
+  $('#category').select2();
+  $('#custom-table').dataTable();
+</script>
+<style type="text/css">
+  .select2-container .select2-selection--single {
+    height: 39px;
+    padding-top: 5px
+  }
+  .select2-selection__arrow {
+    margin-top: 5px;
+  }
+  #date-range {
+    margin-top: -30px;
+  }
+  .calendar-icon {
+    margin-left: 12px;
+    margin-top: 10px;
+  }
+</style>

@@ -1,0 +1,210 @@
+<% content_for :co_header do %>
+  <div class="row co-header">
+    <div class="col-md-3">
+      <div><%= @co_header%></div>
+    </div>
+    <div class="col-md-6"></div>
+    <div class="col-md-3">
+      <div><%= link_to "New Menu", new_kitchen_path, class: "btn btn-success btn-xs", style: "margin-left:-30px;margin-top:-8px;"%></div>
+    </div>
+</div>
+<% end %>
+<style>
+  table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+  }
+  td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+  }
+  tr:nth-child(even) {
+    background-color: #dddddd;
+  }
+  .circle-tile {
+    margin-bottom: 15px;
+    text-align: center;
+    width: 320px;
+  }
+  .circle-tile-content {
+    padding-top: 50px;
+  }
+  .circle-tile-number {
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1;
+    padding: 5px 0 15px;
+  }
+  .circle-tile-description {
+    text-transform: uppercase;
+  }
+  .circle-tile-footer {
+    background-color: rgba(0, 0, 0, 0.1);
+    color: rgba(255, 255, 255, 0.5);
+    display: block;
+    padding: 5px;
+    transition: all 0.4s ease-in-out 0s;
+  }
+  .circle-tile-footer:hover {
+    background-color: rgba(0, 0, 0, 0.2);
+    color: rgba(255, 255, 255, 0.5);
+    text-decoration: none;
+  }
+  .sounth {
+    background-color: rgb(102, 0, 51);
+  }
+  .meals {
+    background-color: rgb(168, 50, 158);
+  }
+  .dark-blue {
+    background-color: #34495E;
+  }
+  .green {
+    background-color: rgb(0, 102, 0);
+  }
+  .blue {
+    background-color: rgb(50, 58, 168);
+  }
+  .chinese {
+    background-color: rgb(125, 50, 168);
+  }
+  .rice {
+    background-color: rgb(168, 50, 60);
+  }
+  .red {
+    background-color: #E74C3C;
+  }
+  .yellow {
+    background-color: #F1C40F;
+  }
+  .text-faded {
+      color: rgba(255, 255, 255, 0.7);
+  }
+  .black {
+    background-color: black;
+  }
+
+</style>
+<% item_details = @kitchen_items %>
+<div class="container">
+  <div class="row">
+    <div class="col-sm-4">
+      <div class="circle-tile ">
+        <div class="circle-tile-content red">
+          <div class="circle-tile-description text-faded"> CHATT</div>
+          <div class="circle-tile-number text-faded "><%= item_details.where(category: "CHATT").count%></div>
+          <%= link_to fetch_menu_category_wise_kitchens_path(category: "chatt"), class: "circle-tile-footer" do %>More Info
+            <i class="fa fa-chevron-circle-right"></i>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-4">
+      <div class="circle-tile ">
+        <div class="circle-tile-content yellow">
+          <div class="circle-tile-description text-faded"> BREAKFAST </div>
+          <div class="circle-tile-number text-faded "><%= item_details.where(category: "BREAKFAST").count%></div>
+          <%= link_to fetch_menu_category_wise_kitchens_path(category: "breakfast"), class: "circle-tile-footer" do %>More Info
+            <i class="fa fa-chevron-circle-right"></i>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-4">
+      <div class="circle-tile ">
+        <div class="circle-tile-content sounth">
+          <div class="circle-tile-description text-faded"> SOUTH INDIAN </div>
+          <div class="circle-tile-number text-faded "><%= item_details.where(category: "SOUTH INDIAN").count%></div>
+          <%= link_to fetch_menu_category_wise_kitchens_path(category: "south_indian"), class: "circle-tile-footer" do %>More Info
+            <i class="fa fa-chevron-circle-right"></i>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-4">
+      <div class="circle-tile ">
+        <div class="circle-tile-content blue">
+          <div class="circle-tile-description text-faded"> INDIAN BREAD </div>
+          <div class="circle-tile-number text-faded "><%= item_details.where(category: "INDIAN BREAD").count%></div>
+          <%= link_to fetch_menu_category_wise_kitchens_path(category: "indian_bread"), class: "circle-tile-footer" do %>More Info
+            <i class="fa fa-chevron-circle-right"></i>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-4">
+      <div class="circle-tile ">
+        <div class="circle-tile-content rice">
+          <div class="circle-tile-description text-faded"> RICE ITEMS</div>
+          <div class="circle-tile-number text-faded "><%= item_details.where(category: "RICE ITEMS").count %></div>
+          <%= link_to fetch_menu_category_wise_kitchens_path(category: "rice_item"), class: "circle-tile-footer" do %>More Info
+            <i class="fa fa-chevron-circle-right"></i>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-4">
+      <div class="circle-tile ">
+        <div class="circle-tile-content chinese">
+          <div class="circle-tile-description text-faded"> CHINESE </div>
+          <div class="circle-tile-number text-faded "><%= item_details.where(category: "CHINESE").count %></div>
+          <%= link_to fetch_menu_category_wise_kitchens_path(category: "chinese"), class: "circle-tile-footer" do %>More Info
+            <i class="fa fa-chevron-circle-right"></i>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-4">
+      <div class="circle-tile ">
+        <div class="circle-tile-content meals">
+          <div class="circle-tile-description text-faded"> MEALS </div>
+          <div class="circle-tile-number text-faded "><%= item_details.where(category: "MEALS").count %></div>
+          <%= link_to fetch_menu_category_wise_kitchens_path(category: "meals"), class: "circle-tile-footer" do %>More Info
+            <i class="fa fa-chevron-circle-right"></i>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-4">
+      <div class="circle-tile ">
+        <div class="circle-tile-content dark-blue">
+          <div class="circle-tile-description text-faded">SNACKS</div>
+          <div class="circle-tile-number text-faded "><%= item_details.where(category: "SNACKS").count %></div>
+          <%= link_to fetch_menu_category_wise_kitchens_path(category: "snacks"), class: "circle-tile-footer" do %>More Info
+            <i class="fa fa-chevron-circle-right"></i>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-4">
+      <div class="circle-tile">
+        <div class="circle-tile-content green">
+          <div class="circle-tile-description text-faded"> DRINKS </div>
+          <div class="circle-tile-number text-faded "><%= item_details.where(category: "DRINKS").count %></div>
+          <%= link_to fetch_menu_category_wise_kitchens_path(category: "drinks"), class: "circle-tile-footer" do %>More Info
+            <i class="fa fa-chevron-circle-right"></i>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-4">
+      <div class="circle-tile">
+        <div class="circle-tile-content black">
+          <div class="circle-tile-description text-faded"> OTHER </div>
+          <div class="circle-tile-number text-faded "><%= item_details.where(category: "OTHER").count %></div>
+          <%= link_to fetch_menu_category_wise_kitchens_path(category: "other"), class: "circle-tile-footer" do %>More Info
+            <i class="fa fa-chevron-circle-right"></i>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

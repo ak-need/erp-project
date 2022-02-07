@@ -1,0 +1,40 @@
+<style type="text/css">
+  body {
+    background-image: url(<%= asset_path("blur-background04.jpg")%>);
+    background-repeat: no-repeat;
+  }
+  .account-signup {
+    margin-left: -341px;
+    margin-top: 60px
+  }
+  .log-in {
+    margin-left: 30px;
+  }
+</style>
+<div class="login-form">
+  <br/>
+  <br/>
+  <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+    <div class="form-group">
+      <div class="col-md-offset-3 col-md-4">
+        <%= f.email_field :email, class: "form-control", placeholder: "Enter your email", required: true %>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-md-offset-3 col-md-4">
+        <br/>
+        <%= f.password_field :password, class: "form-control", placeholder: "Enter your password", required: true %>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-md-offset-4 col-md-3">
+        <br/>
+        <%= f.submit "Log in", class: 'btn btn-primary btn-lg btn-xlarge log-in' %>
+      </div>
+    </div>
+  <% end %>
+  <div class="col-md-4 col-md-offset-4 colormatch account-signup">
+    <br/>
+    <<< <%= link_to "Don't have an account? Sign up now!", new_admin_registration_path %> >>>
+  </div>
+</div>

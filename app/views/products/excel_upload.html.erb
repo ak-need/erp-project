@@ -1,0 +1,71 @@
+<% content_for :co_header do %>
+  <div class="row co-header">
+    <div class="col-md-3">
+      <div>Products > Excel Upload</div>
+    </div>
+    <div class="col-md-3">
+    </div>
+    <div class="col-md-3">
+    </div>
+    <div class="col-md-3">
+      <div><%= link_to "Add Product", new_product_path, class: "btn btn-success btn-xs", style: "margin-left:-30px;margin-top:-8px;"%></div>
+    </div>
+  </div>
+<% end %>
+<br><br><br>
+<%= form_tag import_products_products_path, multipart: true, id: "upload-excel-product" do %>
+  <br>
+  <div class="row">
+    <div class="col-md-4"></div>
+    <div class="col-md-4"><%= image_tag('upload.png', class: "image-excel-upload")%></div>
+    <div class="col-md-4"></div>
+  </div>
+  <br>
+  <div class="row">
+    <div class="col-md-4"></div>
+    <div class="col-md-4">
+      <%= file_field_tag :file, class: "upload-field", required: true%>
+    </div>
+    <div class="col-md-4"></div>
+  </div>
+  <br>
+  <div class="row">
+    <div class="col-md-4"></div>
+    <div class="col-md-1">
+      <%= link_to "Close", products_path, class: "btn btn-danger btn-xs back" %>
+    </div>
+    <div class="col-md-4">
+      <%= submit_tag "Upload", class: "btn btn-success btn-xs", id: "submit-upload" %>
+
+    </div>
+    <div class="col-md-3"></div>
+  </div>
+  <br>
+<% end %>
+<style type="text/css">
+  .back {
+    margin-left: 220px;
+  }
+  .image-excel-upload{
+    margin-left: -20px
+  }
+  #submit-upload{
+    margin-left: -7px;
+  }
+  .upload-field {
+    border: 2px solid gray;
+    color: gray;
+    margin-left:-47px;
+    background-color: white;
+    padding: 8px 10px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: bold;
+  }
+  #upload-excel-product {
+    width: 550px;
+    margin-left:230px;
+    /*background-color: grey;*/
+    border-style: dotted
+  }
+</style>

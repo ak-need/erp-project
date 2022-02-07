@@ -1,0 +1,50 @@
+<%= form_with model: @vendor, local: true do |f| %>
+  <div class="row">
+    <div class="col-md-3"></div>
+    <div class="col-md-4">
+      <%= f.label :name %>
+      <%= f.text_field :name , class: "form-control", placeholder: "Enter Vendor Name", required: true %>
+    </div>
+  </div><br>
+  <div class="row">
+    <div class="col-md-3"></div>
+    <div class="col-md-4">
+      <%= f.label :email %>
+      <%= f.text_field :email , class: "form-control", placeholder: "Enter Vendor Email", required: true %>
+    </div>
+  </div><br>
+  <div class="row">
+    <div class="col-md-3"></div>
+    <div class="col-md-4">
+      <%= f.label :mobile %>
+      <%= f.text_field :mobile , class: "form-control", placeholder: "Enter Vendor Mobile", required: true %>
+    </div>
+  </div><br>
+  <div class="row">
+    <div class="col-md-3"></div>
+    <div class="col-md-4">
+      <%= f.label :gstin, "GSTIN" %>
+      <%= f.text_field :gstin , class: "form-control", placeholder: "Enter GST No" %>
+    </div>
+  </div>
+  <br>
+  <div class="row">
+    <div class="col-md-4"></div>
+    <div class="col-md-4">
+      <%= f.submit "#{ @vendor.new_record? ? "Create Vendor" : "Update Vendor" }", class: "btn btn-primary" %>
+      <br><br>
+      <center><%= link_to "Back", :back, class: "back" %></center>
+    </div>
+  </div>
+
+<% end %>
+<style type="text/css">
+  body {
+    background-image: url(<%= asset_path("blur-background04.jpg")%>);
+    background-repeat: no-repeat;
+  }
+  .back {
+    margin-left: -220px;
+
+  }
+</style>

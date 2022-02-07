@@ -1,0 +1,97 @@
+!!!
+%html
+  %head
+    %meta{:content => "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}/
+    %title A MART
+    = csrf_meta_tags
+    = stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload'
+    = javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
+  %body
+    %nav.navbar.navbar-default.navbar-static-top
+      .main-container
+        .navbar-header
+          %button.navbar-toggle.collapsed{"aria-controls" => "navbar", "aria-expanded" => "false", "data-target" => "#navbar", "data-toggle" => "collapse", :type => "button"}
+            %span.sr-only Toggle navigation
+            %span.icon-bar
+            %span.icon-bar
+            %span.icon-bar
+          = link_to "A MART", root_path, class: "navbar-brand"
+        #navbar.navbar-collapse.collapse
+          %ul.nav.navbar-nav.navbar-right
+            %li
+              %br
+              #time
+            %li
+              %br
+              #date
+            %li
+            - if !current_admin
+              %li= link_to "Login", new_admin_session_path
+              %li= link_to "Sign Up", new_admin_registration_path
+            - else
+              %li.dropdown
+                %a.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}
+                  = image_tag("user.png", class: "img-circle avatar_small")
+                   #{}
+                  %span.caret
+                %ul.dropdown-menu
+                  %li= link_to "Edit Profile", edit_registration_path(current_admin)
+                  %li= link_to "Log out", destroy_admin_session_path, method: :delete
+    = render 'layouts/errors'
+    = render 'layouts/left_side_bar'
+    .content-for-co-header
+      = yield :co_header
+    .container-for-render
+      = yield
+:javascript
+  window.setInterval(showTime, 1000);
+  showDate();
+  function showTime() {
+    var date = new Date();
+    var h = date.getHours();
+    var m = date.getMinutes();
+    var s = date.getSeconds();
+    var session = "AM"
+    if (h == 0){
+      h = 12;
+    }
+    if (h > 12){
+      h = h - 12;
+      session = "PM";
+    }
+    h = (h < 10) ? "0" + h : h;
+    m = (m < 10) ? "0" + m : m;
+    s = (s < 10) ? "0" + s : s;
+    var time = h + ":" + m + ":" + s + " " + session;
+    document.getElementById("time").innerText = time;
+    document.getElementById("time").innerContent = time;
+  }
+  function showDate(){
+    var d = new Date();
+    var da = d.getDate();
+    var month = d.getMonth();
+    var montharray = ["Jan","Feb","Mar","April","May","June","July","Aug","Sep","Oct","Nov","Dec"];
+    month = montharray[month];
+    var year = d.getFullYear();
+    var day = d.getDay();
+    var dayarray = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+    day = dayarray[day];
+    var finalDate = day + " " + da + " " + month + " " + year
+    document.getElementById("date").innerText = finalDate;
+    document.getElementById("date").innerContent = finalDate;
+  }
+:css
+  #time {
+    color:black;
+    margin-left: -550px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: medium;
+    font-weight: bold;
+  }
+  #date {
+    color:black;
+    margin-left: -450px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: medium;
+    font-weight: bold;
+  }

@@ -1,0 +1,50 @@
+<% content_for :co_header do %>
+  <div class="row co-header">
+    <div class="col-md-3">
+      <div>Vendors Report</div>
+    </div>
+    <div class="col-md-6"></div>
+    <div class="col-md-3">
+      <div></div>
+    </div>
+  </div>
+<% end %>
+<div class="row">
+  <div class="col-md-12">
+    <table id="custom-table">
+      <thead>
+        <tr>
+          <th>SI No.</th>
+          <th>Vendor Name</th>
+          <th>Email</th>
+          <th>Mobile</th>
+          <th>GSTIN</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if @vendors.present? %>
+          <% count = 0 %>
+          <% @vendors.each do |vendor| %>
+            <% count += 1 %>
+            <tr>
+              <td><%= count %></td>
+              <td><%= vendor.name %></td>
+              <td><%= vendor.email %></td>
+              <td><%= vendor.mobile %></td>
+              <td><%= vendor.gstin %></td>
+            </tr>
+          <% end %>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+<br><br>
+<div class="row">
+  <div class="col-md-1">
+    <%= link_to 'Generate PDF', vendor_reports_path(format: :pdf), class: "btn btn-success", target: "_blank" %>
+  </div>
+</div>
+<script type="text/javascript">
+  $('#custom-table').dataTable();
+</script>

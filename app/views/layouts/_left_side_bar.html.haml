@@ -1,0 +1,166 @@
+:css
+  body {
+    font-family: "Lato", sans-serif;
+  }
+  .sidenav {
+    height: 100%;
+    width: 200px;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: white;
+    overflow-x: hidden;
+    padding-top: 20px;
+  }
+  .sidenav a, .dropdown-btn {
+    padding: 6px 8px 6px 16px;
+    text-decoration: none;
+    font-size: 20px;
+    color: #818181;
+    display: block;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    outline: none;
+    border-bottom: 1px solid #f8f9fa;
+  }
+  .sidenav a:hover, .dropdown-btn:hover {
+    color: black;
+    background-color: #f8f9fa!important;
+  }
+  .active {
+    background-color: grey;
+    color: white;
+  }
+  .dropdown-container {
+    display: none;
+    padding-left: 8px;
+
+  }
+  .fa-caret-down {
+    float: right;
+    padding-right: 6px;
+  }
+  @media screen and (min-width:768px) {
+    .sidenav {
+      padding-top: 15px;
+      position: fixed;
+      top: 60px;
+      left: 225px;
+      width: 225px;
+      margin-left: -225px;
+      margin-top: -12px;
+      border: none;
+      border-radius: 0;
+      overflow-y: auto;
+      background-color: white;
+      bottom: 0;
+      overflow-x: hidden;
+      padding-bottom: 46px;
+    }
+    .sidenav a {font-size: 18px;}
+  }
+  @media(min-width:768px) {
+    .side-nav {
+      position: fixed;
+      top: 60px;
+      left: 225px;
+      width: 225px;
+      margin-left: -225px;
+      margin-top: -12px;
+      overflow-y: auto;
+      background-color: white;
+      bottom: 0;
+      overflow-x: hidden;
+      padding-bottom: 46px;
+
+    }
+    .side-nav>li>a {
+      width: 225px;
+      border: 1px solid blue;
+    }
+    .side-nav li a:hover,
+    .side-nav li a:focus {
+      outline: none;
+    }
+  }
+.collapse.navbar-collapse.navbar-ex1-collapse
+  -if current_admin
+    .sidenav
+      = link_to root_path, style: "font-size:16px;" do
+        #{image_tag('dashboard.jpg', size: '20x20', alt: 'Food')}&nbsp; Dashboard
+      = link_to purchased_billing_path, style: "font-size:16px;" do
+        #{image_tag('bill.png', size: '20x20', alt: 'Food')}&nbsp; Billing
+      = link_to billing_path, style: "font-size:16px;" do
+        #{image_tag('tax-icon.png', size: '20x20', alt: 'Food')}&nbsp;&nbsp; Tax Invoice
+      %button.dropdown-btn{style: "font-size:16px;"}
+        #{image_tag('money.png', size: '20x20', alt: 'Food')}&nbsp; Vendors Amount
+        %i.fa.fa-caret-down
+      .dropdown-container
+        -@vendors = Vendor.all.order("created_at asc")
+        -if @vendors.present?
+          -@vendors.each do |vendor|
+            = link_to vendor.name, fetch_vendor_amount_vendors_path(vendor_id: vendor.id), style: "font-size:15px"
+      %button.dropdown-btn{style: "font-size:16px;"}
+        #{image_tag('import-export.png', size: '20x20', alt: 'Food')}&nbsp; Vendor import/export
+        %i.fa.fa-caret-down
+      .dropdown-container
+        = link_to "Generate Sample Template", products_path(format: :xlsx), style: "font-size:15px"
+        = link_to "Excel Template Upload", excel_upload_products_path, style: "font-size:15px"
+      = link_to products_path, style: "font-size:16px;" do
+        #{image_tag('product.png', size: '20x20', alt: 'Food')}&nbsp; View Vendor Products
+      %button.dropdown-btn{style: "font-size:16px;"}
+        #{image_tag('product.png', size: '20x20', alt: 'Food')}&nbsp; Purchased Items
+        %i.fa.fa-caret-down
+      .dropdown-container
+        = link_to "Generate Sample Template", purchased_items_path(format: :xlsx), style: "font-size:15px"
+        = link_to "Excel Template Upload", excel_upload_purchased_items_path, style: "font-size:15px"
+        = link_to "View Items", purchased_items_path, style: "font-size:15px"
+
+      %button.dropdown-btn{style: "font-size:16px;"}
+        #{image_tag('vendor.png', size: '20x20', alt: 'Food')}&nbsp; Vendors
+        %i.fa.fa-caret-down
+      .dropdown-container
+        -@vendors = Vendor.all
+        -if @vendors.present?
+          -@vendors.each do |vendor|
+            = link_to vendor.name, fetch_product_vendor_wise_products_path(vendor_id: vendor.id), style: "font-size:15px"
+      %button.dropdown-btn{style: "font-size:16px;"}
+        #{image_tag('report.png', size: '20x20', alt: 'Food')}&nbsp; Reports
+        %i.fa.fa-caret-down
+      .dropdown-container
+        = link_to "Vendor Sales Report", sale_reports_path, style: "font-size:15px"
+        = link_to "Vendor Product Report", product_reports_path, style: "font-size:15px"
+        = link_to "Vendor Report", vendor_reports_path, style: "font-size:15px"
+        = link_to "Purchased Report", purchased_item_reports_path, style: "font-size:15px"
+        = link_to "Sale Report", purchased_sale_reports_path, style: "font-size:15px"
+      %br
+      %i.icon-dashboard
+      %div.center{ style: 'color:red;font-size:16px;font-weight: bold;'}
+        &nbsp; &nbsp; Food Court
+        %br
+        %br
+        %div{style: "font-size:16px;"}
+          = link_to kitchens_path, style: "font-size: 16px;" do
+            #{image_tag('food-court.png', size: '20x20', alt: 'Food')}&nbsp;&nbsp; Kitchen
+          = link_to billing_for_kitchen_path, style: "font-size: 16px;" do
+            #{image_tag('bill.png', size: '20x20', alt: 'Food')}&nbsp;&nbsp; Kitchen Billing
+      %br
+
+:javascript
+  var dropdown = document.getElementsByClassName("dropdown-btn");
+  var i;
+  for (i = 0; i < dropdown.length; i++) {
+    dropdown[i].addEventListener("click", function() {
+    this.classList.toggle("active");
+    var dropdownContent = this.nextElementSibling;
+    if (dropdownContent.style.display === "block") {
+    dropdownContent.style.display = "none";
+    } else {
+    dropdownContent.style.display = "block";
+    }
+    });
+  }

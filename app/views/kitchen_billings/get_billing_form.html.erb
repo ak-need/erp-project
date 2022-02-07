@@ -1,0 +1,290 @@
+<div class="row co-header display-none">
+  <div class="col-md-3">
+    <div>Welcome to Lara's Billing</div>
+  </div>
+  <div class="col-md-4">
+  </div>
+  <div class="col-md-2">
+    <div></div>
+  </div>
+  <div class="col-md-2">
+    <div></div>
+  </div>
+</div>
+<%= form_tag billing_path, multipart: true, id: "upload-excel-product" do %>
+  <br>
+  <br>
+  <div class="row display-none">
+    <div class="col-md-3">
+      <%= label_tag 'Select Category'%>
+      <%= select_tag "category", options_for_select(Kitchen.pluck(:category).uniq),{ include_blank: 'Select a Category', class: 'form-control', required: true, onchange: "appenedItems(this)", id: 'category-id' } %>
+    </div>
+    <div class="col-md-3">
+      <%= label_tag 'Select Item'%>
+      <%= select_tag "item", options_for_select([]), { include_blank: 'Select a Item', class: 'form-control', required: true, id: 'product-id'} %>
+    </div>
+    <div class="col-md-3">
+      <%= label_tag 'Quantity'%>
+      <%= text_field_tag "quantity", '', class: 'form-control', required: true, placeholder: "Enter quantity ex: 4, 5", onkeyup: "validateNumericField(this);" %>
+    </div>
+    <div class="col-md-3"><br>
+      <input type="button" class="add-product btn btn-primary" value="Add Item" class="form-control'">
+    </div>
+  </div>
+  <br>
+  <div class="thermal-printer">
+    <div class="row">
+      <div class="mall-address" style="display: none;">
+        <p style="font-weight: bold;margin-left: 120px;margin-top: 15px">Lara's Kitchen</p>
+        <p style="font-weight: bold;margin-left: 210px;margin-top: -15px;font-size: 8px;"><%= image_tag 'food-court.jpg', width: "50px", height: "20px" %></p>
+        <div style="margin-left: 80px;font-size: 6px">OPP. ASHRAM SCHOOL KOVAIPUDUR, COIBATORE - 641012.</div>
+        <div style="font-weight: bold;margin-left: 115px;font-size: 6px">GSTIN : 33BPHPN5266A1Z4</div>
+        <div style="font-weight: bold;margin-left: 80px;font-size: 6px">Phone: +91 9372626283 || For Franchasie: +91 9344831095</div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-9">
+        <table id="custom-table">
+          <thead>
+            <tr>
+              <th class= "display-none"><%= check_box_tag 'select-all'%></th>
+              <th>Item Name</th>
+              <th>Price</th>
+              <th>Quantity</th>
+              <th>Subtotal</th>
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+        </table>
+        <button type="button" class="delete-product btn btn-danger display-none">Remove Item</button>
+        <div class ="display-none" style="margin-left: 800px;margin-top: -56px"><%= label_tag 'GST'%>&nbsp;&nbsp;<%=check_box_tag 'gst', 'yes', true%></div>
+      </div>
+    </div>
+  </div>
+  <br>
+  <div class="row">
+    <div class="col-md-4"></div>
+    <div class="col-md-5"></div>
+    <div class="col-md-3" style="margin-left: -110px;"><%=  button_tag "Print", class: "btn btn-success display-none", type: "button", onclick: "PrintBill()" %></div>
+  </div>
+<% end %>
+<script type="text/javascript">
+  function PrintBill() {
+    var rowCount = $('#custom-table tr').length;
+    if (rowCount <= 1) {
+      toastr.error("There is no product to print")
+    }
+    else {
+      $('.colspan').attr('colspan',3);
+      var total = parseFloat($('#grand-total').text().split("TotalRs.")[1])
+      var cgst_tax = total * 2.5/100
+      var sgst_tax = total * 2.5/100
+      var items_cost  = total - cgst_tax - sgst_tax
+      var actual_cost = "<tr><td colspan='5' class=colspan>"+'Items Cost'+"</td><td>"+'Rs.'+ items_cost.toFixed(2) +"</td</tr>";
+      var cgst = "<tr><td class=colspan>"+'CGST'+"</td><td>"+'Rs.'+ cgst_tax.toFixed(2) +"</td</tr>";
+      var sgst = "<tr><td class=colspan>"+'SGST'+"</td><td>"+'Rs.'+ sgst_tax.toFixed(2) +"</td</tr>";
+      var net_amount = "<tr><td class=colspan>"+'Net Amount'+"</td><td>"+'Rs.'+ total.toFixed(2) +"</td</tr>";
+      if ($('#gst').is(':checked')) {
+        $("table tbody").append(actual_cost);
+        $("table tbody").append(cgst);
+        $("table tbody").append(sgst);
+        $("table tbody").append(net_amount);
+        $('.colspan').attr('colspan',3);
+      }
+      window.print();
+      location.reload()
+    }
+  }
+  function validateNumericField(field_id){
+    var value = $(field_id).val();
+    var exp = /((([0-9]+\.[0-9]+)$)|([0-9]+$))/
+    var result = value.search(exp)
+    if(result!=0){
+      $(field_id).val('')
+    }
+  }
+
+  $(document).ready(function(){
+    $('#product-id').select2();
+    $(".add-product").click(function(){
+      var category = $('#category-id').val()
+      var productId = $('#product-id').val()
+      var quantity = $('#quantity').val()
+      if (category == "") {
+        toastr.error("Please select Category")
+      }
+      else if(productId == "") {
+        toastr.error("Please select Item")
+      }
+      else if(quantity == "" || quantity == 0) {
+        toastr.error("Please enter Quantity")
+      }
+      else {
+        var productValueId = $('#product-id').val()
+        var previousProduct = $('#product_name_'+ productValueId).text()
+        var previousQuantity = parseInt($('#quantity_'+ productValueId).text());
+        var enteredQuantity = parseInt($('#quantity').val());
+        var updatedQuantity = previousQuantity + enteredQuantity;
+        var quantityAvailable = parseInt($('#quantity-available').val());
+        if (updatedQuantity > quantityAvailable) {
+          $('#quantity').val('')
+          toastr.error("Availbale Item quantity is less")
+        }
+        else if (previousProduct !== undefined && previousProduct !== "") {
+          var price = parseFloat($('#price_'+productValueId).text().split("Rs.")[1]);
+          var subTotal = price*updatedQuantity
+          $('#quantity_'+ productValueId).text(updatedQuantity);
+          $('#sub_total_'+ productValueId).text('Rs.'+subTotal.toFixed(2));
+          $('#grand-total').remove();
+          var totalAmount = 0
+          $("table tbody").find('.sub_total').each(function(){
+            var amount = parseFloat(this.textContent.split("Rs.")[1])
+            totalAmount = totalAmount + amount
+          });
+          var total = "<tr id=grand-total><td colspan='4' class=colspan>"+'Total'+"</td><td>"+'Rs.'+totalAmount.toFixed(2)+"</td</tr>";
+          $("table tbody").append(total);
+          toastr.success("Item added successfully!")
+        }
+        else {
+          $.ajax({
+            url: '/kitchen_billings/fetch_item_detail'+'?item_id=' + productId,
+            type: 'GET',
+            success: function(data){
+              var jsonData = Object(data)
+              var markup = "<tr><td class=display-none><input type='checkbox' name='record'></td><td id= "+'product_name_'+jsonData[0]+">"+jsonData[1] + "</td><td id="+'price_'+jsonData[0]+">" +'Rs.'+ jsonData[2].toFixed(2).toString() + "</td><td id="+'quantity_'+jsonData[0]+">"+ quantity +"</td><td class=sub_total id="+'sub_total_'+ jsonData[0]+">"+ 'Rs.'+(parseInt(jsonData[2])*parseInt(quantity)).toFixed(2).toString()+"</td></tr>";
+
+              var totalAmount = parseInt(jsonData[2])*parseInt(quantity)
+
+              $("table tbody").find('.sub_total').each(function(){
+                var amount = parseFloat(this.textContent.split("Rs.")[1])
+                totalAmount = totalAmount + amount
+              });
+
+              $('#grand-total').remove();
+              var total = "<tr id=grand-total><td colspan='4' class=colspan>"+'Total'+"</td><td>"+'Rs.'+totalAmount.toFixed(2)+"</td</tr>";
+              $("table tbody").append(markup);
+              $("table tbody").append(total);
+              toastr.success("Item added successfully!")
+            }
+          });
+        }
+      }
+    });
+    $(".delete-product").click(function(){
+      $("table tbody").find('input[name="record"]').each(function(){
+        if($(this).is(":checked")){
+          $(this).parents("tr").remove();
+          toastr.success("Item removed successfully!")
+        }
+      });
+      $('#grand-total').remove();
+      var totalAmount = 0
+      $("table tbody").find('.sub_total').each(function(){
+        var amount = parseFloat(this.textContent.split("Rs.")[1])
+        totalAmount = totalAmount + amount
+      });
+      var total = "<tr id=grand-total><td colspan='4' class=colspan>"+'Total'+"</td><td>"+'Rs.'+totalAmount.toFixed(2)+"</td</tr>";
+      $("table tbody").append(total);
+    });
+    $("#select-all").click(function(){
+      $("table tbody").find('input[name="record"]').each(function(){
+        $(this).prop('checked', ($(':checkbox').prop('checked')) ? true : false);
+      });
+    });
+  });
+  function appenedItems(select) {
+    $('#product-id').find('option').remove().end().append('<option value="">Select a Item</option>').val('');
+    $('#quantity').val('')
+    var vendorId = select.value
+    if (vendorId !== "") {
+      $.ajax({
+        url: '/kitchen_billings/append_items'+'?category=' + select.value,
+        type: 'GET',
+        success: function(data){
+          var jsonData = Object(data)
+          var keys = Object.keys(data)
+          var length = keys.length;
+          for(var k = 0; k < length; k++){
+            $("#product-id").append(new Option(jsonData[keys[k]], keys[k]));
+          }
+        }
+      });
+    }
+  }
+</script>
+<style>
+  @media print {
+    @page {
+      size: auto;   /* auto is the initial value */
+      margin: 0;  /* this affects the margin in the printer settings */
+    }
+    .display-none {
+      display:none;
+    }
+    .mall-address {
+      display:block !important;
+      margin-left: -50px !important;
+    }
+    #custom-table td, th {
+      border: none !important;
+    }
+    #custom-table {
+      border: none !important;
+    }
+    .toast {
+      display: none;
+    }
+    #grand-total td{
+      border-top: 1px dashed black !important;
+    }
+    tr th:first-child, tr td:first-child { text-align: left; }
+    #custom-table tr:last-child { border-top: 1px dashed black !important;font-weight: bold !important;}
+    .thermal-printer{
+      box-shadow: 0 0 1in -0.25in rgba(0, 0, 0, 0.5) !important;
+      font-size: 8px !important;
+      padding:2mm !important;
+      margin: 0 auto !important;
+      width: 59mm !important;
+      background: #FFF !important;
+      ::selection {background: #f31544; color: #FFF !important;}
+      ::moz-selection {background: #f31544; color: #FFF !important;}
+    }
+  }
+
+  #product-id {
+    position: relative;
+    z-index: 2;
+    float: left;
+    width: 100%;
+    margin-bottom: 0;
+    display: table;
+    table-layout: fixed;
+  }
+  .select2-container .select2-selection--single {
+    height: 39px;
+    padding-top: 5px
+  }
+  .select2-selection__arrow {
+    margin-top: 5px;
+  }
+  form{
+    margin: 20px 0;
+  }
+  form input, button{
+    padding: 5px;
+  }
+  table{
+    width: 100%;
+    margin-bottom: 20px;
+    border-collapse: collapse;
+  }
+  table, th, td{
+    border: 1px solid #cdcdcd;
+  }
+  table th, table td{
+    padding: 9px;
+    text-align: left;
+  }
+
+</style>

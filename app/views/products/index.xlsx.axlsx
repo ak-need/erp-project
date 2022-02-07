@@ -1,0 +1,92 @@
+wb = xlsx_package.workbook
+
+wb.styles do |style|
+  project_heading = style.add_style(b: true, sz: 11, alignment: {horizontal: :center}, bg_color: 'b3b3b3')
+  bold = style.add_style(b: true, border: Axlsx::STYLE_THIN_BORDER, alignment: { horizontal: :center, vertical: :top, wrap_text: true })
+  intruction_col = style.add_style(bg_color: '33adff', sz: 15, :alignment => { :horizontal => :center,
+                                            :vertical => :center ,
+                                            :wrap_text => true})
+  not_mandate_heading = style.add_style(bg_color: 'ecffb3', sz: 15, :alignment => { :horizontal => :center,
+                                            :vertical => :center ,
+                                            :wrap_text => true})
+  mandate_heading = style.add_style(bg_color: '1fc600', sz: 15, :alignment => { :horizontal => :center,
+                                            :vertical => :center ,
+                                            :wrap_text => true})
+  product_instruction = style.add_style(b: true, bg_color: 'b3ffe6',sz: 11,
+                                        :alignment => {},
+                                        :border => {
+                                        :style =>
+                                        :thin, :color => 'F000000',
+                                        :name => :top,
+                                        :edges => [:top] }
+                                        )
+  wb.add_worksheet(name: "Instruction") do |sheet|
+    sheet.sheet_protection.password = "fish"
+    sheet.add_row [""]
+    sheet.add_row [""]
+    sheet.add_row ['', '', '', 'Optional Fields']
+    sheet.add_row ['', '', '', 'Mandatory Fields']
+    sheet.add_row [""]
+    sheet.add_row ['', '', '', "Note"]
+    sheet.rows[2].cells[3].style = not_mandate_heading
+    sheet.rows[3].cells[3].style = mandate_heading
+    sheet.rows[5].cells[3].style = intruction_col
+    sheet.add_row ["","","", "SKU: This column should have 'SKU' number of the product. If you are not sure, leave this field blank."]
+    sheet.add_row ["","","", "Product Name: (MANDATORY) This column should have the Product name. This can have short additional info like Size, Color, code of the Products, etc., to identify your products ealisy."]
+    sheet.add_row ["","","", "Vendor/Supplier: (MANDATORY) This column should have the name of the Vendor (you). ASK will take care of this column for Vendor name in POS system."]
+    sheet.add_row ["","","", "Category: (MANDATORY) This column should have the Category of the product. For example, Shirts, Sarees, Silk Sarees, Bracelets, Rings, etc."]
+    sheet.add_row ["","","", "Barcode: This column should have the Unique Barcode of the products. If Vendor is not maintaining any Barcodes, ASK will take care of this column in POS system (by having unique Barcode)."]
+    sheet.add_row ["","","", "Quantity: (MANDATORY) This column should have the Quantity of the Product, delivered to ASK Market Place."]
+    sheet.add_row ["","","", "Base Price: (MANDATORY) This column should have the Selling Price which Vendor wants to sell to the Customers in ASK Market Place, excluding GST. ('SalePrice=BasePrice+GST')"]
+    sheet.add_row ["","","", "Sale Price: (MANDATORY) This column should have the Selling Price of one Product, which Vendor wants to sell to the Customers in ASK Market Place (including GST if applicable)."]
+    sheet.add_row ["","","", "GST %: This column should have the GST % of the product, if GST is aplicable on the product. If left blank, ASK will consider this product is not applicable for GST."]
+    sheet.add_row ["","","", "Cost: This column should have the Cost of Product, not mandatory - only for tracking the products Profit vs Loss (comparing Sale Price vs Cost)."]
+    sheet.add_row ["","","", "HSN Code: This column should have the HSN code of the product, if product is applicable for GST. (HSN code is standard code which will be required while billing & filing GST)"]
+    sheet.rows[6].cells[3].style = product_instruction
+    sheet.rows[7].cells[3].style = product_instruction
+    sheet.rows[8].cells[3].style = product_instruction
+    sheet.rows[9].cells[3].style = product_instruction
+    sheet.rows[10].cells[3].style = product_instruction
+    sheet.rows[11].cells[3].style = product_instruction
+    sheet.rows[12].cells[3].style = product_instruction
+    sheet.rows[13].cells[3].style = product_instruction
+    sheet.rows[14].cells[3].style = product_instruction
+    sheet.rows[15].cells[3].style = product_instruction
+    sheet.rows[16].cells[3].style = product_instruction
+    sheet.column_widths nil, nil, nil, 210
+    if @vendors.present?
+      @vendors.each do |vendor|
+        sheet.add_row ["","","", "", "", vendor.name]
+      end
+    end
+    sheet.column_info[5].hidden = true
+  end
+end
+
+wb.styles do |style|
+  not_mandate_heading = style.add_style(bg_color: 'ecffb3', b: true, sz: 13, alignment: {horizontal: :center})
+  mandate_heading = style.add_style(sz: 13, bg_color: '1fc600', b: true, sz: 11, alignment: {horizontal: :center})
+  wb.add_worksheet(name: "Products") do |sheet|
+    sheet.add_row ["SI No.", "SKU No", "Product Name", "Vendor/Supplier", "Category", "Barcode", "Quantity", "Base Price", "Sale Price", "GST %", "Cost", "HSN Code"]
+    sheet.col_style (2..4), mandate_heading
+    sheet.col_style (6..8), mandate_heading
+    sheet.col_style (0..1), not_mandate_heading
+    sheet.col_style 5, not_mandate_heading
+    sheet.col_style 9..11, not_mandate_heading
+    sheet.column_widths 16, 25, 35, 25, 25, 25, 16, 16, 16, 16, 16, 25
+    sheet.add_data_validation("D2:D1000000", {
+      :type => :list,
+      :formula1 => "Instruction!F$18:F$100000",
+      :showDropDown => false,
+      :showErrorMessage => true,
+      :errorTitle => '',
+      :error => 'Please use the dropdown selector to select a vendor',
+      :errorStyle => :stop,
+      :showInputMessage => true,
+      :promptTitle => 'Be careful!',
+      :prompt => 'Choose the value from the dropdown'
+    })
+  end
+end
+
+

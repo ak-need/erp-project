@@ -1,0 +1,8 @@
+{
+  "name": "mark-fly",
+  "private": true,
+  "dependencies": {
+    "datatables.net": "^1.10.20",
+    "datatables.net-dt": "^1.10.20"
+  }
+}

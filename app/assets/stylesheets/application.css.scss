@@ -1,0 +1,287 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, or any plugin's
+ * vendor/assets/stylesheets directory can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the bottom of the
+ * compiled file so the styles you add here take precedence over styles defined in any other CSS/SCSS
+ * files in this directory. Styles in this file should be added after the last require_* statement.
+ * It is generally better to create a new file per style scope.
+ *
+ *= require toastr
+ *= require font-awesome
+ *= require select2
+ *= require daterangepicker
+ *= require_tree .
+ *= require_self
+ */
+
+@import "bootstrap-sprockets";
+@import "bootstrap";
+@import "font-awesome";
+@import "toastr";
+@import "font-awesome-sprockets";
+@import 'bootstrap/theme';
+
+#barcode-scanner canvas.drawingBuffer, #barcode-scanner video.drawingBuffer {
+  display: none;
+}
+
+#barcode-scanner canvas, #barcode-scanner video {
+  width: 100%;
+  height: auto;
+}
+.avatar_small {
+  width: 28px;
+}
+.avatar_medium {
+  width: 48px;
+}
+.avatar_large {
+  width: 68px;
+}
+.avatar-full {
+  width: 100%;
+}
+body {
+  color: #565a5c;
+  background-color: #F8F8F8;
+  font-family: "Varela Round", "Helvetica Neue", "Helvetica","Arial", sans-serif;
+}
+a {
+  color: #00A699;
+}
+.container-for-render {
+
+  margin-left:19%;
+  margin-top: 145px;
+  position: auto;
+}
+.text-babu, .icon-babu {
+  color: #00A699
+}
+.navbar-default {
+  background-color: white;
+  position: fixed;
+  width: 100%;
+  height: 7.5%;
+}
+.navbar-default .navbar-brand{
+  color: #FF5A5F;
+  font-size: 2em;
+  font-weight: 400;
+}
+.btn-block {
+  display: block;
+  white-space: normal;
+  width: 100%;
+}
+.btn {
+  color: #fff;
+  border-radius: 5px;
+  font-weight: bold;
+  padding: 9px 27px;
+}
+.btn-small {
+  padding: 5px 15px;
+  margin-top: 15px;
+}
+.btn:hover, .btn:focus {
+  color: #fff;
+}
+.btn.btn-default {
+  width: 100%;
+  border-color: #c4c4c4;
+  background: white;
+  color: #484848;
+  border-radius: 2px;
+  padding: 10px 0;
+  margin-top: 10px;
+}
+.btn.btn-normal {
+  border: 1px solid #ff5a5f;
+  background-color: #ff5a5f;
+}
+.btn.btn-normal:active {
+  outline: none;
+  border-color: #e00007;
+  background-color: #e00007;
+}
+.btn.btn-form {
+  border: 1px solid #00A699;
+  background-color: #00A699;
+}
+.btn.btn-form:active {
+  outline: none;
+  border-color: #066165;
+  background-color: #066165;
+}
+.panel-default .panel-heading {
+  color: #ffffff;
+  background-color: #00A699;
+  font-size: 18px;
+  font-weight: 400;
+}
+.row-space-1 {
+  margin-top: 6px;
+  margin-bottom: 6px;
+}
+.row-space-2 {
+  margin-top: 12px;
+  margin-bottom: 12px;
+}
+.row-space-3 {
+  margin-top: 24px;
+  margin-bottom: 24px;
+}
+
+/* FORMS */
+.form-group {
+  margin-bottom: 25px;
+}
+.form-control {
+  border-radius: 2PX;
+  height: 4rem;
+}
+.form-group input {
+  height: 45px;
+  border: 1px solid #00A699;
+}
+.form-group textarea {
+  border: 1px solid #00A699;
+}
+
+/* SIDEBAR */
+.sidebar-list {
+  padding-left: 0;
+  list-style: none;
+}
+.sidebar-item {
+  padding: 10px 0;
+  font-size: 16px;
+  color: #82888a;
+}
+.sidebar-link {
+  color: #82888a;
+  text-decoration: none;
+}
+.sidebar-link:hover, .sidebar-link:focus {
+  color: #CACCCD;
+  text-decoration: none;
+}
+.active.sidebar-link {
+  color: #565A5C;
+  font-weight: bold;
+  text-decoration: none;
+}
+/* PHOTO UPLOAD*/
+.btn-file {
+  position: relative;
+  overflow: hidden;
+}
+.btn-file input[type=file] {
+  position: absolute;
+  top: 0;
+  right: 0;
+  min-width: 100%;
+  min-height: 100%;
+  font-size: 100px;
+  text-align: right;
+  filter: alpha(opacity=0);
+  opacity: 0;
+  outline: none;
+  background: white;
+  cursor: inherit;
+  display: block;
+}
+
+.form-control.datepicker {
+  color: #00A699;
+  background-color: white;
+  border: 1px solid #00A699;
+  text-align: center;
+}
+.message-alert {
+  color: #d43242;
+  font-size: 14px;
+  padding-top: 10px;
+}
+
+@media(min-width:768px) {
+  .side-nav {
+    position: fixed;
+    top: 60px;
+    left: 225px;
+    width: 225px;
+    margin-left: -225px;
+    margin-top: -12px;
+    border: none;
+    border-radius: 0;
+    overflow-y: auto;
+    background-color: white;
+    bottom: 0;
+    overflow-x: hidden;
+    padding-bottom: 46px;
+  }
+  .side-nav>li>a {
+    width: 225px;
+  }
+  .side-nav li a:hover,
+  .side-nav li a:focus {
+    outline: none;
+  }
+}
+.co-header {
+  position: absolute;
+  top: 60px;
+  left: 242px;
+  height:50px;
+  width: 100%;
+  border: none;
+  border-radius: 0;
+  background-color: white;
+  bottom: 0;
+  padding-top:16px;
+  padding-left:10px;
+}
+
+/* table design */
+#custom-table {
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#custom-table td, #custom-table th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+#custom-table tr:nth-child(even){background-color: #f2f2f2;}
+
+#custom-table tr:hover {background-color: #ddd;}
+
+#custom-table th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #4CAF50;
+  color: white;
+}
+
+/* ------------------Required Field--------------------*/
+.required-field::before {
+  content: "*";
+  color: red;
+  float: right;
+}
+#barcode-scanner canvas.drawingBuffer, #barcode-scanner video.drawingBuffer {
+  display: none;
+}
+
+#barcode-scanner canvas, #barcode-scanner video {
+  width: 100%;
+  height: auto;
+}
